@@ -20,7 +20,7 @@
     /* Celá souprava letadlo -> provázek -> papír */
     .flight-container {
       position: absolute;
-      left: -800px; /* Startuje úplně vlevo mimo obrazovku */
+      left: -900px; /* Startuje úplně vlevo mimo obrazovku */
       top: 42%;
       display: flex;
       align-items: center;
@@ -28,17 +28,17 @@
       animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Letadlo směřující doprava */
+    /* Papírové letadlo směřující špičkou doprava */
     .airplane {
-      width: 90px;
+      width: 65px;
       height: auto;
-      filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
+      filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.15));
       flex-shrink: 0;
     }
 
     /* Provázek táhnoucí se za letadlem */
     .string {
-      width: 80px;
+      width: 70px;
       height: 2px;
       border-top: 2px dashed #b0b0b0;
       flex-shrink: 0;
@@ -87,7 +87,7 @@
     /* Animace příletu zleva na střed */
     @keyframes flyIn {
       0% {
-        left: -800px;
+        left: -900px;
       }
       100% {
         left: 50%;
@@ -109,15 +109,15 @@
 <body>
 
   <div class="flight-container">
-    <!-- Letadlo (správně otočené špičkou doprava) -->
-    <svg class="airplane" viewBox="0 0 512 512" fill="#db2777" xmlns="http://www.w3.org/2000/svg">
-      <path d="M480.32,204.51L83.27,11.23C43.16-8.23,0,19.24,0,63.95v116.4c0,15.24,11.28,28.02,26.4,29.74l287.41,32.74c4.1,0.47,7.21,3.87,7.21,8.02c0,4.15-3.11,7.55-7.21,8.02L26.4,282.16C11.28,283.88,0,296.66,0,311.9v116.4c0,44.71,43.16,72.18,83.27,52.72l397.05-193.28C522.65,270.66,522.65,241.34,480.32,204.51z"/>
+    <!-- 1. Papírové letadlo (poletí jako PRVNÍ v čele) -->
+    <svg class="airplane" viewBox="0 0 24 24" fill="#db2777" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
     </svg>
 
-    <!-- Provázek -->
+    <!-- 2. Provázek -->
     <div class="string"></div>
 
-    <!-- Okrasný papír -->
+    <!-- 3. Okrasný papír s pozvánkou -->
     <div class="banner">
       <h1>Zveme tě na naši svatbu 🩷</h1>
       <p>Anežka & Kuba</p>
