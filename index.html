@@ -20,7 +20,8 @@
     .flight-container {
       position: absolute;
       left: -800px;
-      top: 35%;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       align-items: center;
       animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -28,7 +29,7 @@
 
     /* Váš obrázek plakátku/papíru */
     .banner-img {
-      width: 320px;
+      width: 250px;
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
@@ -46,11 +47,10 @@
 
     /* Váš obrázek letadla */
     .airplane-img {
-      width: 90px;
+      width: 150px;
       height: auto;
       filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
       flex-shrink: 0;
-      transform: scaleX(-1); 
     }
 
     @keyframes flyIn {
