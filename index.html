@@ -17,29 +17,28 @@
       font-family: 'Georgia', serif;
     }
 
-    /* Kontejnér startuje zcela mimo obrazovku vlevo */
+    /* Celá souprava letadlo -> provázek -> papír */
     .flight-container {
       position: absolute;
-      left: -700px;
-      top: 40%;
+      left: -800px; /* Startuje úplně vlevo mimo obrazovku */
+      top: 42%;
       display: flex;
       align-items: center;
-      /* Animace příletu do středu obrazovky */
+      /* Animace příletu: trvá 4 sekundy, zastaví se uprostřed */
       animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Styl letadla (otočené tak, aby letělo špičkou doprava) */
+    /* Letadlo směřující doprava */
     .airplane {
-      width: 75px;
+      width: 90px;
       height: auto;
-      transform: rotate(0deg); /* Pokud by letělo špatně, můžeme otočit */
-      filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.2));
+      filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
       flex-shrink: 0;
     }
 
-    /* Provázek */
+    /* Provázek táhnoucí se za letadlem */
     .string {
-      width: 70px;
+      width: 80px;
       height: 2px;
       border-top: 2px dashed #b0b0b0;
       flex-shrink: 0;
@@ -85,24 +84,24 @@
       font-style: italic;
     }
 
-    /* Klíčové snímky pro přílet – dojede na střed obrazovky */
+    /* Animace příletu zleva na střed */
     @keyframes flyIn {
       0% {
-        left: -700px;
+        left: -800px;
       }
       100% {
         left: 50%;
-        transform: translateX(-50%); /* Vycentruje celou soupravu přesně na střed */
+        transform: translateX(-50%);
       }
     }
 
-    /* Jemné vlání papírku */
+    /* Jemné vlání papírku po zastavení */
     @keyframes wave {
       0% {
-        transform: rotate(-1.5deg) translateY(0px);
+        transform: rotate(-1deg) translateY(0px);
       }
       100% {
-        transform: rotate(2.5deg) translateY(-6px);
+        transform: rotate(2deg) translateY(-5px);
       }
     }
   </style>
@@ -110,15 +109,15 @@
 <body>
 
   <div class="flight-container">
-    <!-- 1. Letadlo (poletí vepředu) -->
-    <svg class="airplane" viewBox="0 0 24 24" fill="#db2777" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+    <!-- Letadlo (správně otočené špičkou doprava) -->
+    <svg class="airplane" viewBox="0 0 512 512" fill="#db2777" xmlns="http://www.w3.org/2000/svg">
+      <path d="M480.32,204.51L83.27,11.23C43.16-8.23,0,19.24,0,63.95v116.4c0,15.24,11.28,28.02,26.4,29.74l287.41,32.74c4.1,0.47,7.21,3.87,7.21,8.02c0,4.15-3.11,7.55-7.21,8.02L26.4,282.16C11.28,283.88,0,296.66,0,311.9v116.4c0,44.71,43.16,72.18,83.27,52.72l397.05-193.28C522.65,270.66,522.65,241.34,480.32,204.51z"/>
     </svg>
 
-    <!-- 2. Provázek -->
+    <!-- Provázek -->
     <div class="string"></div>
 
-    <!-- 3. Okrasný papír -->
+    <!-- Okrasný papír -->
     <div class="banner">
       <h1>Zveme tě na naši svatbu 🩷</h1>
       <p>Anežka & Kuba</p>
