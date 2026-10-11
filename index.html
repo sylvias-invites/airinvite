@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pozvánka na svatbu</title>
+  <style>
+    /* Základní styl stránky */
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(to bottom, #e0f2fe, #fef2f2); /* Jemné nebe */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Kontejnér pro letadlo a papírek */
+    .flight-container {
+      position: absolute;
+      left: -600px; /* Začíná schované vlevo mimo obrazovku */
+      top: 40%;
+      display: flex;
+      align-items: center;
+      /* Animace příletu zleva do středu */
+      animation: flyIn 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    /* Styl letadla (SVG obrázek) */
+    .airplane {
+      width: 80px;
+      height: auto;
+      transform: rotate(5deg);
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
+    }
+
+    /* Provázek spojující letadlo a papírek */
+    .string {
+      width: 60px;
+      height: 2px;
+      border-top: 2px dashed #888;
+      margin-top: -10px;
+    }
+
+    /* Papírek s textem */
+    .banner {
+      background: #ffffff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid #fbcfe8;
+      text-align: center;
+      transform-origin: left center;
+      /* Animace vlání papírku ve větru */
+      animation: wave 2.5s ease-in-out infinite alternate;
+    }
+
+    .banner h1 {
+      margin: 0;
+      color: #be185d;
+      font-size: 1.8rem;
+    }
+
+    .banner p {
+      margin: 5px 0 0 0;
+      color: #4b5563;
+      font-size: 1.1rem;
+    }
+
+    /* KÍČOVÉ SNÍMKY (KEYFRAMES) */
+
+    /* Animace příletu na střed */
+    @keyframes flyIn {
+      0% {
+        left: -600px;
+      }
+      100% {
+        left: calc(50% - 220px); /* Zastaví se přibližně uprostřed */
+      }
+    }
+
+    /* Efekt jemného houpání/vlání za letadlem */
+    @keyframes wave {
+      0% {
+        transform: rotate(-2deg) translateY(0px);
+      }
+      100% {
+        transform: rotate(3deg) translateY(-5px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flight-container">
+    <!-- SVG Grafika Letadla -->
+    <svg class="airplane" viewBox="0 0 24 24" fill="#3b82f6" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+    </svg>
+
+    <!-- Provázek -->
+    <div class="string"></div>
+
+    <!-- Papírek s pozvánkou -->
+    <div class="banner">
+      <h1>Zveme tě na naši svatbu 🩷</h1>
+      <p>Anežka & Kuba</p>
+    </div>
+  </div>
+
+</body>
+</html>
