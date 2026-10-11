@@ -14,35 +14,38 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      font-family: 'Georgia', serif; /* Elegantnější svatební font */
+      font-family: 'Georgia', serif;
     }
 
-    /* Kontejnér: letadlo je teď PRVNÍ v kódu, takže poletí vepředu */
+    /* Kontejnér startuje zcela mimo obrazovku vlevo */
     .flight-container {
       position: absolute;
-      left: -650px; /* Začíná schované vlevo */
+      left: -700px;
       top: 40%;
       display: flex;
       align-items: center;
+      /* Animace příletu do středu obrazovky */
       animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Styl letadla (zaseknuté správně doleva, směřuje dopředu) */
+    /* Styl letadla (otočené tak, aby letělo špičkou doprava) */
     .airplane {
-      width: 70px;
+      width: 75px;
       height: auto;
-      transform: rotate(0deg);
+      transform: rotate(0deg); /* Pokud by letělo špatně, můžeme otočit */
       filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.2));
+      flex-shrink: 0;
     }
 
-    /* Provázek táhnoucí se za letadlem */
+    /* Provázek */
     .string {
-      width: 80px;
+      width: 70px;
       height: 2px;
       border-top: 2px dashed #b0b0b0;
+      flex-shrink: 0;
     }
 
-    /* Okrasný svatební papír (banner) */
+    /* Okrasný svatební papír */
     .banner {
       background: linear-gradient(135deg, #fffdfa 0%, #fff5f7 100%);
       padding: 25px 35px;
@@ -51,11 +54,12 @@
       border: 2px solid #fbcfe8;
       position: relative;
       text-align: center;
+      flex-shrink: 0;
       transform-origin: left center;
       animation: wave 3s ease-in-out infinite alternate;
     }
 
-    /* Ozdobný vnitřní rámeček pro retro/okrasný vzhled papíru */
+    /* Vnitřní ozdobný rámeček */
     .banner::after {
       content: '';
       position: absolute;
@@ -81,17 +85,18 @@
       font-style: italic;
     }
 
-    /* Animace příletu zleva do středu */
+    /* Klíčové snímky pro přílet – dojede na střed obrazovky */
     @keyframes flyIn {
       0% {
-        left: -650px;
+        left: -700px;
       }
       100% {
-        left: calc(50% - 240px); /* Upraveno tak, aby byl výsledek přesně uprostřed */
+        left: 50%;
+        transform: translateX(-50%); /* Vycentruje celou soupravu přesně na střed */
       }
     }
 
-    /* Jemné vlání papírku ve větru */
+    /* Jemné vlání papírku */
     @keyframes wave {
       0% {
         transform: rotate(-1.5deg) translateY(0px);
@@ -105,15 +110,15 @@
 <body>
 
   <div class="flight-container">
-    <!-- 1. LETADLO (poletí vepředu) -->
+    <!-- 1. Letadlo (poletí vepředu) -->
     <svg class="airplane" viewBox="0 0 24 24" fill="#db2777" xmlns="http://www.w3.org/2000/svg">
       <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
     </svg>
 
-    <!-- 2. PROVÁZEK -->
+    <!-- 2. Provázek -->
     <div class="string"></div>
 
-    <!-- 3. OKRASNÝ SVATEBNÍ PAPÍR -->
+    <!-- 3. Okrasný papír -->
     <div class="banner">
       <h1>Zveme tě na naši svatbu 🩷</h1>
       <p>Anežka & Kuba</p>
