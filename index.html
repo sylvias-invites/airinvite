@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       height: 100vh;
-      /* Nádherný přechod: nahoře nebesky modrá, uprostřed jemný přechod, dole červánkově růžová až červená */
+      /* Přechod pozadí: nahoře modrá, dole růžová/červená */
       background: linear-gradient(to bottom, #bae6fd 0%, #e0f2fe 45%, #fbcfe8 70%, #f43f5e 100%);
       display: flex;
       justify-content: center;
@@ -18,38 +18,38 @@
       overflow: hidden;
     }
 
+    /* Hlavní kontejner drží všechno krásně uprostřed pod sebou */
     .scratch-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-   }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-.main-title {
-    font-family: 'Great Vibes', cursive;;
-    font-size: 2.8rem;
-    color: #000000;
-    margin-top: 32px;
-    margin-bottom: 8px;
-    font-weight: normal;
-    transition: opacity 0.6s ease;
-}
+    .main-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3rem;
+      color: #000000;
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-weight: normal;
+      text-align: center;
+    }
 
+    /* Kontejner pro letadlo a lístek – nyní se animuje přirozeně na středu */
     .flight-container {
-      position: absolute;
-      left: -800px;
-      top: 50%;
-      transform: translateY(-50%);
       display: flex;
       align-items: center;
+      position: relative;
+      /* Animace příletu zleva */
       animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Váš obrázek plakátku/papíru */
+    /* Obrázek plakátku/papíru */
     .banner-img {
       width: 250px;
       height: auto;
@@ -63,11 +63,11 @@
     .string {
       width: 60px;
       height: 2px;
-      border-top: 2px dashed rgba(255, 255, 255, 0.7); /* Světlejší provázek, aby hezky vynikl */
+      border-top: 2px dashed rgba(255, 255, 255, 0.7);
       flex-shrink: 0;
     }
 
-    /* Váš obrázek letadla */
+    /* Obrázek letadla */
     .airplane-img {
       width: 150px;
       height: auto;
@@ -75,17 +75,17 @@
       flex-shrink: 0;
     }
 
+    /* Animace příletu: startuje vlevo mimo obrazovku a dojede na střed */
     @keyframes flyIn {
       0% {
-        left: -800px;
-        transform: translateY(-50%);
+        transform: translateX(-100vw);
       }
       100% {
-        left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(0);
       }
     }
 
+    /* Jemné vlání papíru */
     @keyframes wave {
       0% {
         transform: rotate(-1deg) translateY(0px);
@@ -96,32 +96,27 @@
     }
 
     /* Tlačítko pro přechod dál */
-.next-btn {
-    margin-top: 20px;
-    padding: 12px 28px;
-    
-    /* pozadí a černý text */
-    background-color: #dce0ff;
-    color: #000000;
-    
-    border: 2px solid #000000;
-    border-radius: 25px;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
+    .next-btn {
+      margin-top: 30px;
+      padding: 12px 28px;
+      background-color: #dce0ff;
+      color: #000000;
+      border: 2px solid #000000;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
 
-.next-btn.visible {
-    opacity: 1;
-    pointer-events: auto;
-}
-    
-</style>
+    .next-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
 </head>
 <body>
 
@@ -139,12 +134,9 @@
       <img src="plane.png" alt="Letadlo" class="airplane-img">
     </div>
 
-    <!-- Tlačítko je teď správně VENKU pod letadlem, aby se dalo umístit kamkoliv -->
+    <!-- Tlačítko pod letadlem -->
     <button class="next-btn" id="next-btn" onclick="openDetails()">Vstoupit na pozvánku &rarr;</button>
-
   </div>
-
-</body>
 
 </body>
 </html>
