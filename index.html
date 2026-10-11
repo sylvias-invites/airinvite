@@ -9,82 +9,53 @@
       margin: 0;
       padding: 0;
       height: 100vh;
-      background: linear-gradient(to bottom, #e0f2fe, #fef2f2);
+      /* Nádherný přechod: nahoře nebesky modrá, uprostřed jemný přechod, dole červánkově růžová až červená */
+      background: linear-gradient(to bottom, #bae6fd 0%, #e0f2fe 45%, #fbcfe8 70%, #f43f5e 100%);
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      font-family: 'Georgia', serif;
     }
 
     .flight-container {
       position: absolute;
-      /* Začínáme tak daleko vlevo, aby byla celá souprava schovaná */
-      left: -500px;
-      top: 42%;
+      left: -800px;
+      top: 35%;
       display: flex;
       align-items: center;
-      /* Přiletíme na střed obrazovky */
       animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    .banner {
-      background: linear-gradient(135deg, #fffdfa 0%, #ECA4B2 100%);
-      padding: 25px 35px;
-      border-radius: 12px;
-      box-shadow: 0 15px 35px rgba(190, 24, 93, 0.12);
-      border: 2px solid #fbcfe8;
-      position: relative;
-      text-align: center;
+    /* Váš obrázek plakátku/papíru */
+    .banner-img {
+      width: 320px;
+      height: auto;
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
       transform-origin: right center;
       animation: wave 3s ease-in-out infinite alternate;
     }
 
-    .banner::after {
-      content: '';
-      position: absolute;
-      top: 5px; left: 5px; right: 5px; bottom: 5px;
-      border: 1px dashed #F5CFE3;
-      border-radius: 8px;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    .banner h1 {
-      margin: 0 0 8px 0;
-      color: #131313;
-      font-size: 1.6rem;
-      font-weight: normal;
-      letter-spacing: 0.5px;
-    }
-
-    .banner p {
-      margin: 0;
-      color: #6b7280;
-      font-size: 1rem;
-      font-style: italic;
-    }
-
+    /* Provázek mezi nimi */
     .string {
-      width: 70px;
+      width: 60px;
       height: 2px;
-      border-top: 2px dashed #b0b0b0;
+      border-top: 2px dashed rgba(255, 255, 255, 0.7); /* Světlejší provázek, aby hezky vynikl */
       flex-shrink: 0;
     }
 
-    .airplane {
-      width: 65px;
+    /* Váš obrázek letadla */
+    .airplane-img {
+      width: 90px;
       height: auto;
-      filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.15));
+      filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
       flex-shrink: 0;
-      /* Otočíme letadlo špičkou doprava, aby táhlo soupravu */
-      transform: scaleX(-1);
+      transform: scaleX(-1); 
     }
 
     @keyframes flyIn {
       0% {
-        left: -600px;
+        left: -800px;
       }
       100% {
         left: 50%;
@@ -105,19 +76,14 @@
 <body>
 
   <div class="flight-container">
-    <!-- 1. Vlevo bude teď papírek -->
-    <div class="banner">
-      <h1>Zveme tě na naši svatbu 🩷</h1>
-      <p>Anežka & Kuba</p>
-    </div>
+    <!-- 1. Tvůj obrázek pozvánky (nahraj do složky jako ticket.png) -->
+    <img src="ticket.png" alt="Svatební pozvánka" class="banner-img">
 
-    <!-- 2. Uprostřed provázek -->
+    <!-- 2. Provázek -->
     <div class="string"></div>
 
-    <!-- 3. Vpravo letadlo, které táhne celou soupravu dopředu -->
-    <svg class="airplane" viewBox="0 0 24 24" fill="#322B2E" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-    </svg>
+    <!-- 3. Tvůj obrázek letadla (nahraj do složky jako plane.png) -->
+    <img src="plane.png" alt="Letadlo" class="airplane-img">
   </div>
 
 </body>
