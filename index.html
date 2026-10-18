@@ -50,6 +50,7 @@
     .flight-container {
       display: flex;
       align-items: center;
+      justify-content: center;
       position: relative;
       /* Animace příletu zleva na střed */
       animation: flyIn 5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -78,7 +79,7 @@
       height: 2px;
       border-top: 2px dashed rgba(255, 255, 255, 0.8);
       /* Po 3.5 sekundách provázek zprůhlední, ale nekolabuje do šířky 0 */
-      animation: fadeOutOnly 0.8s ease 5s forwards;
+      animation: fadeAndHide 0.8s ease 5s forwards;
     }
 
     /* Obrázek letadla */
@@ -100,16 +101,22 @@
       }
     }
 
-    /* Čisté zmizení bez poskakování šířky */
-    @keyframes fadeOutOnly {
-      0% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        pointer-events: none;
-      }
-    }
+    /* Zneviditelnění a odstranění z toku dokumentu */
+@keyframes fadeAndHide {
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+    pointer-events: none;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+    pointer-events: none;
+  }
+}
+
 
     /* Jemné vlání letenky */
     @keyframes wave {
