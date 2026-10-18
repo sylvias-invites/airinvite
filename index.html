@@ -50,7 +50,7 @@
       animation: flightSequence 9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Letenka - zpočátku skrytá, objeví se až při druhém příletu v 5. sekundě */
+    /* Letenka - zpočátku skrytá, objeví se při druhém příletu v 5. sekundě */
     .banner-img {
       width: 270px;
       height: auto;
@@ -76,8 +76,6 @@
       width: 140px;
       height: auto;
       filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
-      /* Protože letadlo letí napřed zprava, otočíme ho horizontálně, 
-         ale při druhém příletu zleva ho zas vrátíme do normálu */
       animation: planeFlip 9s linear forwards;
     }
 
@@ -85,49 +83,49 @@
 
     @keyframes flightSequence {
       0% {
-        transform: translateX(120vw) translateY(0) scaleX(1);
+        transform: translateX(-120vw) translateY(0) scaleX(-1);
       }
-      /* První let zprava do leva přes oblouk */
+      /* První let zleva doprava přes oblouk */
       20% {
-        transform: translateX(20vw) translateY(-40px) scaleX(1);
+        transform: translateX(-20vw) translateY(-40px) scaleX(-1);
       }
       40% {
-        transform: translateX(-60vw) translateY(20px) scaleX(1);
+        transform: translateX(60vw) translateY(20px) scaleX(-1);
       }
-      /* Odlet úplně vlevo mimo obrazovku */
+      /* Odlet úplně vpravo mimo obrazovku */
       48% {
-        transform: translateX(-120vw) translateY(50px) scaleX(1);
+        transform: translateX(120vw) translateY(50px) scaleX(-1);
         opacity: 1;
       }
-      /* Rychlý neviditelný přesun zpět na pravou stranu (připraveno pro přílet zleva) */
+      /* Rychlý neviditelný přesun zpět na levou stranu, otočení čumáku doleva */
       49% {
-        transform: translateX(-120vw) translateY(0) scaleX(-1); /* scaleX(-1) otočí letadlo doprava */
+        transform: translateX(120vw) translateY(0) scaleX(1);
         opacity: 0;
       }
       50% {
-        transform: translateX(-120vw) translateY(0) scaleX(-1);
+        transform: translateX(120vw) translateY(0) scaleX(1);
         opacity: 1;
       }
-      /* Druhý přílet zleva s letenkou na střed (letadlo letí čumákem doprava, takže letenka táhne za sebou) */
+      /* Druhý přílet zprava doleva s letenkou na střed */
       100% {
-        transform: translateX(0) translateY(0) scaleX(-1);
+        transform: translateX(0) translateY(0) scaleX(1);
         opacity: 1;
       }
     }
 
-    /* Zajištění správného otočení letadla v obou fázích */
+    /* Otočení letadla podle směru letu */
     @keyframes planeFlip {
       0% {
-        transform: scaleX(1); /* Čumák vlevo (letí zprava) */
+        transform: scaleX(-1); /* Čumák vpravo (letí zleva doprava) */
       }
       49% {
-        transform: scaleX(1);
+        transform: scaleX(-1);
       }
       50% {
-        transform: scaleX(-1); /* Čumák vpravo (letí zleva) */
+        transform: scaleX(1); /* Čumák vlevo (letí zprava doleva) */
       }
       100% {
-        transform: scaleX(-1);
+        transform: scaleX(1);
       }
     }
 
