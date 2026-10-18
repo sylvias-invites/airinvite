@@ -41,41 +41,29 @@
       flex-shrink: 0;
     }
 
-    /* 1. Úvodní text: objeví se hned, v čase 2.5s zmizí */
-    .intro-text {
-      font-size: 1.2rem;
-      color: #4a4a4a;
-      margin-bottom: 35px;
-      letter-spacing: 1px;
-      font-style: italic;
-      text-align: center;
-      animation: hideText 0.5s ease 2.5s forwards;
-    }
-
-    /* 2. Kontejner přiletí od 3. do 7. sekundy (trvá 4s) */
+    /* Kontejner s animací letu */
     .flight-container {
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      opacity: 0; /* Ze začátku neviditelný, než začne letět */
-      animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) 3s forwards;
+      animation: flightSequence 9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Letenka */
+    /* Letenka - zpočátku skrytá, objeví se až při druhém příletu v 5. sekundě */
     .banner-img {
       width: 270px;
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
-      /* Vlání jede pořád, v 7. sekundy se zvětší */
-      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.6s ease 7s forwards;
+      opacity: 0;
+      animation: showTicket 0.1s ease 5s forwards, wave 3s ease-in-out infinite alternate, centerTicket 0.6s ease 9s forwards;
     }
 
-    /* Provázek a letadlo - v 7. sekundě se úplně schovají a vypnou */
+    /* Provázek a letadlo */
     .string, .airplane-img {
       flex-shrink: 0;
-      animation: hidePlaneSmooth 0.6s ease 7s forwards;
+      animation: hidePlaneSmooth 0.6s ease 9s forwards;
     }
 
     .string {
@@ -88,25 +76,64 @@
       width: 140px;
       height: auto;
       filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
+      /* Protože letadlo letí napřed zprava, otočíme ho horizontálně, 
+         ale při druhém příletu zleva ho zas vrátíme do normálu */
+      animation: planeFlip 9s linear forwards;
     }
 
-    /* ANIMACE */
+    /* ANIMACE PŘÍBĚHU */
 
-    @keyframes hideText {
-      to {
+    @keyframes flightSequence {
+      0% {
+        transform: translateX(120vw) translateY(0) scaleX(1);
+      }
+      /* První let zprava do leva přes oblouk */
+      20% {
+        transform: translateX(20vw) translateY(-40px) scaleX(1);
+      }
+      40% {
+        transform: translateX(-60vw) translateY(20px) scaleX(1);
+      }
+      /* Odlet úplně vlevo mimo obrazovku */
+      48% {
+        transform: translateX(-120vw) translateY(50px) scaleX(1);
+        opacity: 1;
+      }
+      /* Rychlý neviditelný přesun zpět na pravou stranu (připraveno pro přílet zleva) */
+      49% {
+        transform: translateX(-120vw) translateY(0) scaleX(-1); /* scaleX(-1) otočí letadlo doprava */
         opacity: 0;
-        visibility: hidden;
+      }
+      50% {
+        transform: translateX(-120vw) translateY(0) scaleX(-1);
+        opacity: 1;
+      }
+      /* Druhý přílet zleva s letenkou na střed (letadlo letí čumákem doprava, takže letenka táhne za sebou) */
+      100% {
+        transform: translateX(0) translateY(0) scaleX(-1);
+        opacity: 1;
       }
     }
 
-    @keyframes flyIn {
+    /* Zajištění správného otočení letadla v obou fázích */
+    @keyframes planeFlip {
       0% {
-        opacity: 0;
-        transform: translateX(-100vw);
+        transform: scaleX(1); /* Čumák vlevo (letí zprava) */
+      }
+      49% {
+        transform: scaleX(1);
+      }
+      50% {
+        transform: scaleX(-1); /* Čumák vpravo (letí zleva) */
       }
       100% {
+        transform: scaleX(-1);
+      }
+    }
+
+    @keyframes showTicket {
+      to {
         opacity: 1;
-        transform: translateX(0);
       }
     }
 
@@ -140,7 +167,7 @@
       }
     }
 
-    /* Tlačítko se ukáže v 7.5 sekundě */
+    /* Tlačítko */
     .next-btn {
       margin-top: 35px;
       padding: 12px 30px;
@@ -156,7 +183,7 @@
       transition: all 0.4s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       backdrop-filter: blur(5px);
-      animation: showBtn 0.6s ease 7.5s forwards;
+      animation: showBtn 0.6s ease 9.5s forwards;
     }
 
     .next-btn:hover {
@@ -177,7 +204,6 @@
 
   <div class="scratch-screen" id="scratch-screen">
     <h1 class="main-title" id="main-title">Míša a Alex</h1>
-    <div class="intro-text">Mám pro tebe překvapení...</div>
     
     <div class="flight-container">
       <img src="ticket.jpeg" alt="Svatební pozvánka" class="banner-img">
