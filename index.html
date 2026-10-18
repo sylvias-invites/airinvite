@@ -45,9 +45,10 @@
     .intro-text {
       font-size: 1.2rem;
       color: #4a4a4a;
-      margin-bottom: 25px;
+      margin-bottom: 35px;
       letter-spacing: 1px;
       font-style: italic;
+      text-align: center;
       animation: hideText 0.5s ease 2.5s forwards;
     }
 
@@ -74,7 +75,7 @@
     /* Provázek a letadlo - v 7. sekundě se úplně schovají a vypnou */
     .string, .airplane-img {
       flex-shrink: 0;
-      animation: hidePlane 0.6s ease 7s forwards;
+      animation: hidePlaneSmooth 0.6s ease 7s forwards;
     }
 
     .string {
@@ -109,17 +110,14 @@
       }
     }
 
-    @keyframes hidePlane {
+    @keyframes hidePlaneSmooth {
       0% {
         opacity: 1;
-      }
-      99% {
-        opacity: 0;
-        pointer-events: none;
+        visibitity: visible;
       }
       100% {
         opacity: 0;
-        display: none;
+        visibility: hidden;
         pointer-events: none;
       }
     }
