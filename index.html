@@ -55,15 +55,16 @@
       animation: flyIn 5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Obrázek letenky */
+        /* Obrázek letenky */
     .banner-img {
       width: 270px;
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
-      animation: wave 3s ease-in-out infinite alternate;
-      transition: transform 0.8 cubic-bezier(0.25,1,0.5,1);
+      /* Tady chybělo přidat animaci centerTicket, aby se po 5s spustila! */
+      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 5s forwards;
     }
+
 
     /* Provázek a letadlo */
     .string, .airplane-img {
