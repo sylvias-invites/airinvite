@@ -46,6 +46,18 @@
       flex-shrink: 0;
     }
 
+    /* Úvodní text před letem */
+     .intro-text {
+      font-size: 1.2rem;
+      color: #4a4a4a;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+      font-style: italic;
+  /* Text se hned zobrazí a po 2.5 sekundách začne mizet (trvá 0.5s) */
+      animation: fadeOutOnly 0.5s ease 2.5s forwards;
+    }
+
+
     /* Kontejner pro letadlo a lístek */
     .flight-container {
       display: flex;
@@ -53,7 +65,7 @@
       justify-content: center;
       position: relative;
       /* Animace příletu zleva na střed */
-      animation: flyIn 5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation: flyIn 5s cubic-bezier(0.25, 1, 0.5, 1) 3s forwards;
     }
 
         /* Obrázek letenky */
@@ -63,7 +75,7 @@
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
       /* Tady chybělo přidat animaci centerTicket, aby se po 5s spustila! */
-      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 5s forwards;
+      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 8s forwards;
     }
 
 
@@ -79,7 +91,7 @@
       height: 2px;
       border-top: 2px dashed rgba(255, 255, 255, 0.8);
       /* Po 3.5 sekundách provázek zprůhlední, ale nekolabuje do šířky 0 */
-      animation: fadeAndHide 0.8s ease 5s forwards;
+      animation: fadeAndHide 0.8s ease 8s forwards;
     }
 
     /* Obrázek letadla */
@@ -88,7 +100,7 @@
       height: auto;
       filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
       /* Po 3.5 sekundách letadlo zprůhlední v klidu na místě */
-      animation: fadeOutOnly 0.8s ease 5s forwards;
+      animation: fadeOutOnly 0.8s ease 8s forwards;
     }
 
     /* Animace příletu celé soupravy */
@@ -176,8 +188,11 @@
 
   <div class="scratch-screen" id="scratch-screen">
     <!-- Nadpis zůstává pevně nahoře a ani se nehne -->
-    <h1 class="main-title" id="main-title">Ema a Míša</h1>
-      
+    <h1 class="main-title" id="main-title">Míša a Alex</h1>
+
+    <!-- Nový úvodní text -->
+    <div class="intro-text">Mám pro tebe překvapení...</div>
+    
     <div class="flight-container">
       <!-- 1. Letenka -->
       <img src="ticket.jpeg" alt="Svatební pozvánka" class="banner-img">
