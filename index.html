@@ -23,7 +23,7 @@
       overflow: hidden;
     }
 
-    /* Hlavní kontejner – pevně drží prvcích pod sebou bez poskakování */
+    /* Hlavní kontejner – pevně drží prvky pod sebou bez poskakování */
     .scratch-screen {
       display: flex;
       flex-direction: column;
@@ -47,42 +47,40 @@
     }
 
     /* Úvodní text před letem */
-     .intro-text {
+    .intro-text {
       font-size: 1.2rem;
       color: #4a4a4a;
       margin-bottom: 25px;
       letter-spacing: 1px;
       font-style: italic;
-  /* Text se hned zobrazí a po 2.5 sekundách začne mizet (trvá 0.5s) */
-      animation: fadeOutOnly 0.5s ease 2.5s forwards;
+      /* Zobrazí se hned a po 2.5 sekundách zmizí */
+      animation: fadeAndHide 0.5s ease 2.5s forwards;
     }
 
-
-    /* Kontejner pro letadlo a lístek */
+    /* Kontejner pro letadlo a lístek – letí až po zmizení textu (v čase 3s) */
     .flight-container {
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      /* Animace příletu zleva na střed */
       animation: flyIn 5s cubic-bezier(0.25, 1, 0.5, 1) 3s forwards;
     }
 
-        /* Obrázek letenky */
+    /* Obrázek letenky */
     .banner-img {
       width: 270px;
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
-      /* Tady chybělo přidat animaci centerTicket, aby se po 5s spustila! */
+      /* Vlání jede pořád, centrování/zvětšení se spustí v 8. sekundě */
       animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 8s forwards;
     }
-
 
     /* Provázek a letadlo */
     .string, .airplane-img {
       flex-shrink: 0;
-      transition: opacity 0.8s ease;
+      /* Obě věci v 8. sekundě zprůhlední a zmizí z layoutu */
+      animation: fadeAndHide 0.8s ease 8s forwards;
     }
 
     /* Provázek */
@@ -90,8 +88,6 @@
       width: 50px;
       height: 2px;
       border-top: 2px dashed rgba(255, 255, 255, 0.8);
-      /* Po 3.5 sekundách provázek zprůhlední, ale nekolabuje do šířky 0 */
-      animation: fadeAndHide 0.8s ease 8s forwards;
     }
 
     /* Obrázek letadla */
@@ -99,8 +95,6 @@
       width: 140px;
       height: auto;
       filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
-      /* Po 3.5 sekundách letadlo zprůhlední v klidu na místě */
-      animation: fadeAndHide 0.8s ease 8s forwards;
     }
 
     /* Animace příletu celé soupravy */
@@ -113,22 +107,21 @@
       }
     }
 
-    /* Zneviditelnění a odstranění z toku dokumentu */
-@keyframes fadeAndHide {
-  0% {
-    opacity: 1;
-  }
-  99% {
-    opacity: 0;
-    pointer-events: none;
-  }
-  100% {
-    opacity: 0;
-    display: none;
-    pointer-events: none;
-  }
-}
-
+    /* Univerzální animace pro plynulé zmizení a odstranění z DOMu */
+    @keyframes fadeAndHide {
+      0% {
+        opacity: 1;
+      }
+      99% {
+        opacity: 0;
+        pointer-events: none;
+      }
+      100% {
+        opacity: 0;
+        display: none;
+        pointer-events: none;
+      }
+    }
 
     /* Jemné vlání letenky */
     @keyframes wave {
@@ -140,23 +133,23 @@
       }
     }
 
-        @keyframes centerTicket {
+    /* Zvětšení letenky po zmizení letadla */
+    @keyframes centerTicket {
       0% {
-        transform: translateX(0) scale(1);
+        transform: scale(1);
       }
       100% {
-        transform: translateX(95px) scale(1.5);
+        transform: scale(1.4);
       }
     }
 
-
-    /* Tlačítko pro přechod dál */
+    /* Tlačítko pro přechod dál – objeví se až po dokončení v 9. sekundě */
     .next-btn {
       margin-top: 35px;
       padding: 12px 30px;
       background-color: rgba(255, 255, 255, 0.85);
       color: #2c2c2c;
-      border: 1.5px solid #d4a373; /* Jemný zlatavý/elegantní okraj */
+      border: 1.5px solid #d4a373;
       border-radius: 30px;
       font-size: 0.95rem;
       letter-spacing: 1.5px;
@@ -166,8 +159,7 @@
       transition: all 0.4s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       backdrop-filter: blur(5px);
-      /* Zobrazí se plynule po doletu */
-      animation: showBtn 0.6s ease 6s forwards;
+      animation: showBtn 0.6s ease 9s forwards;
     }
 
     .next-btn:hover {
@@ -187,24 +179,20 @@
 <body>
 
   <div class="scratch-screen" id="scratch-screen">
-    <!-- Nadpis zůstává pevně nahoře a ani se nehne -->
+    <!-- Nadpis -->
     <h1 class="main-title" id="main-title">Míša a Alex</h1>
 
-    <!-- Nový úvodní text -->
+    <!-- Úvodní text -->
     <div class="intro-text">Mám pro tebe překvapení...</div>
     
+    <!-- Kontejner s letadlem a letenkou -->
     <div class="flight-container">
-      <!-- 1. Letenka -->
       <img src="ticket.jpeg" alt="Svatební pozvánka" class="banner-img">
-
-      <!-- 2. Provázek -->
       <div class="string"></div>
-
-      <!-- 3. Letadlo -->
       <img src="plane.png" alt="Letadlo" class="airplane-img">
     </div>
 
-    <!-- Tlačítko pod letenkou -->
+    <!-- Tlačítko -->
     <button class="next-btn" id="next-btn" onclick="openDetails()">Vstoupit na pozvánku &rarr;</button>
   </div>
 
