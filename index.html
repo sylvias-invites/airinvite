@@ -61,7 +61,7 @@
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
-      animation: wave 3s ease-in-out infinite alternate;
+      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 3.5s forwards;
     }
 
     /* Provázek a letadlo */
@@ -116,6 +116,15 @@
       }
       100% {
         transform: rotate(2deg) translateY(-4px);
+      }
+    }
+
+    @keyframes centerTicket {
+      0 % { 
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(95px);
       }
     }
 
