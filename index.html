@@ -52,7 +52,7 @@
       align-items: center;
       position: relative;
       /* Animace příletu zleva na střed */
-      animation: flyIn 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation: flyIn 5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
     /* Obrázek letenky */
@@ -61,7 +61,7 @@
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
       flex-shrink: 0;
-      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 3.5s forwards;
+      animation: wave 3s ease-in-out infinite alternate, centerTicket 0.8s ease 5s forwards;
     }
 
     /* Provázek a letadlo */
@@ -76,7 +76,7 @@
       height: 2px;
       border-top: 2px dashed rgba(255, 255, 255, 0.8);
       /* Po 3.5 sekundách provázek zprůhlední, ale nekolabuje do šířky 0 */
-      animation: fadeOutOnly 0.8s ease 3.5s forwards;
+      animation: fadeOutOnly 0.8s ease 5s forwards;
     }
 
     /* Obrázek letadla */
@@ -85,7 +85,7 @@
       height: auto;
       filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
       /* Po 3.5 sekundách letadlo zprůhlední v klidu na místě */
-      animation: fadeOutOnly 0.8s ease 3.5s forwards;
+      animation: fadeOutOnly 0.8s ease 5s forwards;
     }
 
     /* Animace příletu celé soupravy */
@@ -121,10 +121,10 @@
 
     @keyframes centerTicket {
       0 % { 
-        transform: translateX(0);
+        transform: translateX(0) scale(1);
       }
       100% {
-        transform: translateX(95px);
+        transform: translateX(95px) scale (1.5);
       }
     }
 
@@ -145,7 +145,7 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       backdrop-filter: blur(5px);
       /* Zobrazí se plynule po doletu */
-      animation: showBtn 0.6s ease 4s forwards;
+      animation: showBtn 0.6s ease 6s forwards;
     }
 
     .next-btn:hover {
