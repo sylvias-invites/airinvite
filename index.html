@@ -6,9 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Svatební pozvánka</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      width: 100vw;
       height: 100vh;
       background-image: url("pozadi.png");
       background-size: cover;
@@ -18,139 +23,73 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      font-family: sans-serif;
     }
 
     .scratch-screen {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      justify-content: space-between;
+      height: 100%;
       width: 100%;
       max-width: 600px;
-      margin: 0 auto;
+      padding: 40px 20px;
+      z-index: 2;
     }
 
     .main-title {
       font-family: 'Great Vibes', cursive;
-      font-size: 3.2rem;
+      font-size: 3.5rem;
       color: #2c2c2c;
-      margin: 0 0 20px 0;
+      margin-top: 20px;
       font-weight: normal;
       text-align: center;
-      flex-shrink: 0;
+      z-index: 10;
     }
 
-    /* Kontejner s animací letu */
-    .flight-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      animation: flightSequence 9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    /* Plátno pro animaci letadel a čar */
+    #animationCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3;
     }
 
-    /* Letenka - zpočátku skrytá, objeví se při druhém příletu v 5. sekundě */
+    /* Kontejner pro lístek uprostřed */
+    .ticket-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease, transform 1s ease, visibility 1s;
+      z-index: 5;
+    }
+
+    /* Když se letadla schovají, lístek se plynule zobrazí */
+    .ticket-container.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
     .banner-img {
-      width: 270px;
+      width: 290px;
+      max-width: 80vw;
       height: auto;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
-      flex-shrink: 0;
-      opacity: 0;
-      animation: showTicket 0.1s ease 5s forwards, wave 3s ease-in-out infinite alternate, centerTicket 0.6s ease 9s forwards;
+      border-radius: 8px;
     }
 
-    /* Provázek a letadlo */
-    .string, .airplane-img {
-      flex-shrink: 0;
-      animation: hidePlaneSmooth 0.6s ease 9s forwards;
-    }
-
-    .string {
-      width: 50px;
-      height: 2px;
-      border-top: 2px dashed rgba(255, 255, 255, 0.8);
-    }
-
-    .airplane-img {
-      width: 140px;
-      height: auto;
-      filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.2));
-    }
-
-    /* ANIMACE PŘÍBĚHU */
-
-    @keyframes flightSequence {
-      0% {
-        transform: translateX(-120vw) translateY(0);
-      }
-      /* 1. První let zleva doprava přes oblouk */
-      20% {
-        transform: translateX(-20vw) translateY(-40px);
-      }
-      40% {
-        transform: translateX(60vw) translateY(20px);
-      }
-      /* Odlet vpravo mimo obrazovku */
-      48% {
-        transform: translateX(120vw) translateY(50px);
-        opacity: 1;
-      }
-      /* Rychlý neviditelný přesun zpět na levou stranu */
-      49% {
-        transform: translateX(-120vw) translateY(0);
-        opacity: 0;
-      }
-      50% {
-        transform: translateX(-120vw) translateY(0);
-        opacity: 1;
-      }
-      /* 2. Druhý přílet zleva s letenkou na střed obrazovky */
-      100% {
-        transform: translateX(0) translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes showTicket {
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes hidePlaneSmooth {
-      0% {
-        opacity: 1;
-        visibility: visible;
-      }
-      100% {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-      }
-    }
-
-    @keyframes wave {
-      0% {
-        transform: rotate(-1deg) translateY(0px);
-      }
-      100% {
-        transform: rotate(2deg) translateY(-4px);
-      }
-    }
-
-    @keyframes centerTicket {
-      0% {
-        transform: scale(1);
-      }
-      100% {
-        transform: scale(1.4);
-      }
-    }
-
-    /* Tlačítko */
+    /* Tlačítko dole */
     .next-btn {
-      margin-top: 35px;
+      margin-bottom: 30px;
       padding: 12px 30px;
       background-color: rgba(255, 255, 255, 0.85);
       color: #2c2c2c;
@@ -161,10 +100,15 @@
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.4s ease;
+      transition: opacity 0.8s ease, transform 0.3s ease, background-color 0.3s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       backdrop-filter: blur(5px);
-      animation: showBtn 0.6s ease 9.5s forwards;
+      z-index: 10;
+    }
+
+    .next-btn.show {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .next-btn:hover {
@@ -172,28 +116,175 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     }
-
-    @keyframes showBtn {
-      to {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
   </style>
 </head>
 <body>
 
+  <canvas id="animationCanvas"></canvas>
+
   <div class="scratch-screen" id="scratch-screen">
     <h1 class="main-title" id="main-title">Míša a Alex</h1>
     
-    <div class="flight-container">
+    <!-- Lístek (původně skrytý) -->
+    <div class="ticket-container" id="ticket-container">
       <img src="ticket.jpeg" alt="Svatební pozvánka" class="banner-img">
-      <div class="string"></div>
-      <img src="plane.png" alt="Letadlo" class="airplane-img">
     </div>
 
     <button class="next-btn" id="next-btn" onclick="openDetails()">Vstoupit na pozvánku &rarr;</button>
   </div>
 
+  <script>
+    const canvas = document.getElementById('animationCanvas');
+    const ctx = canvas.getContext('2d');
+    const ticketContainer = document.getElementById('ticket-container');
+    const nextBtn = document.getElementById('next-btn');
+
+    // Načtení obrázku letadla
+    const planeImage = new Image();
+    planeImage.src = 'plane.png';
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Matematické výpočty pro srdce
+    function getHeartPointLeft(t, centerX, centerY, scale) {
+      if (t <= 0.72) {
+        // Tvarování levé poloviny srdce
+        const heartT = (t / 0.72) * Math.PI;
+        const x = -16 * Math.sin(heartT) ** 3;
+        const y = -(13 * Math.cos(heartT) - 5 * Math.cos(2 * heartT) - 2 * Math.cos(3 * heartT) - Math.cos(4 * heartT));
+        return {
+          x: centerX + x * scale,
+          y: centerY + y * scale
+        };
+      } else {
+        // Odlet po přímé ose nahoru/ven
+        const pStart = getHeartPointLeft(0.72, centerX, centerY, scale);
+        const pPrev = getHeartPointLeft(0.71, centerX, centerY, scale);
+        const dx = pStart.x - pPrev.x;
+        const dy = pStart.y - pPrev.y;
+        const factor = (t - 0.72) / 0.28 * 40;
+        return {
+          x: pStart.x + dx * factor,
+          y: pStart.y + dy * factor
+        };
+      }
+    }
+
+    function getHeartPointRight(t, centerX, centerY, scale) {
+      if (t <= 0.72) {
+        // Tvarování pravé poloviny srdce
+        const heartT = (t / 0.72) * Math.PI;
+        const x = 16 * Math.sin(heartT) ** 3;
+        const y = -(13 * Math.cos(heartT) - 5 * Math.cos(2 * heartT) - 2 * Math.cos(3 * heartT) - Math.cos(4 * heartT));
+        return {
+          x: centerX + x * scale,
+          y: centerY + y * scale
+        };
+      } else {
+        // Odlet po přímé ose nahoru/ven
+        const pStart = getHeartPointRight(0.72, centerX, centerY, scale);
+        const pPrev = getHeartPointRight(0.71, centerX, centerY, scale);
+        const dx = pStart.x - pPrev.x;
+        const dy = pStart.y - pPrev.y;
+        const factor = (t - 0.72) / 0.28 * 40;
+        return {
+          x: pStart.x + dx * factor,
+          y: pStart.y + dy * factor
+        };
+      }
+    }
+
+    // Vykreslení obrázku letadla s rotací
+    function drawPlane(x, y, angle) {
+      if (!planeImage.complete) return;
+      
+      ctx.save();
+      ctx.translate(x, y);
+      // Jelikož váš obrázek plane.png směřuje doprava (0 rad), přímo dosadíme vypočítaný angle
+      ctx.rotate(angle);
+      
+      const width = 65; // Šířka vykresleného letadla
+      const height = (planeImage.height / planeImage.width) * width;
+      
+      ctx.drawImage(planeImage, -width / 2, -height / 2, width, height);
+      ctx.restore();
+    }
+
+    let progress = 0;
+    const speed = 0.003; // Rychlost animace
+    let animationFinished = false;
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height * 0.48;
+      const scale = Math.min(canvas.width, canvas.height) / 38;
+
+      // 1. Kreslení bílé čárkované stopy (Levá strana)
+      ctx.beginPath();
+      ctx.setLineDash([7, 7]);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.95)";
+      ctx.lineWidth = 3.5;
+
+      for (let i = 0; i <= progress && i <= 1; i += 0.004) {
+        const pt = getHeartPointLeft(i, centerX, centerY, scale);
+        if (i === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.stroke();
+
+      // 2. Kreslení bílé čárkované stopy (Pravá strana)
+      ctx.beginPath();
+      for (let i = 0; i <= progress && i <= 1; i += 0.004) {
+        const pt = getHeartPointRight(i, centerX, centerY, scale);
+        if (i === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.stroke();
+
+      // Vypnutí čárkování pro kreslení letadla
+      ctx.setLineDash([]);
+
+      // 3. Vykreslení letadel
+      if (progress <= 1) {
+        // Levé letadlo
+        const pL = getHeartPointLeft(progress, centerX, centerY, scale);
+        const pLNext = getHeartPointLeft(progress + 0.002, centerX, centerY, scale);
+        const angleL = Math.atan2(pLNext.y - pL.y, pLNext.x - pL.x);
+        drawPlane(pL.x, pL.y, angleL);
+
+        // Pravé letadlo
+        const pR = getHeartPointRight(progress, centerX, centerY, scale);
+        const pRNext = getHeartPointRight(progress + 0.002, centerX, centerY, scale);
+        const angleR = Math.atan2(pRNext.y - pR.y, pRNext.x - pR.x);
+        drawPlane(pR.x, pR.y, angleR);
+
+        progress += speed;
+        requestAnimationFrame(animate);
+      } else if (!animationFinished) {
+        animationFinished = true;
+        
+        // Zobrazení lístku chvíli po odletu letadel
+        setTimeout(() => {
+          ticketContainer.classList.add('show');
+          nextBtn.classList.add('show');
+        }, 300);
+      }
+    }
+
+    planeImage.onload = () => {
+      animate();
+    };
+
+    function openDetails() {
+      alert("Přechod na detail pozvánky...");
+    }
+  </script>
 </body>
 </html>
