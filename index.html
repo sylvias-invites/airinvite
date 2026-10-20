@@ -72,7 +72,6 @@
       z-index: 5;
     }
 
-    /* Když se letadla schovají, lístek se plynule zobrazí */
     .ticket-container.show {
       opacity: 1;
       visibility: visible;
@@ -139,7 +138,6 @@
     const ticketContainer = document.getElementById('ticket-container');
     const nextBtn = document.getElementById('next-btn');
 
-    // Načtení obrázku letadla
     const planeImage = new Image();
     planeImage.src = 'plane.png';
 
@@ -150,131 +148,162 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Matematické výpočty pro srdce
-    function getHeartPointLeft(t, centerX, centerY, scale) {
-      if (t <= 0.72) {
-        // Tvarování levé poloviny srdce
-        const heartT = (t / 0.72) * Math.PI;
-        const x = -16 * Math.sin(heartT) ** 3;
-        const y = -(13 * Math.cos(heartT) - 5 * Math.cos(2 * heartT) - 2 * Math.cos(3 * heartT) - Math.cos(4 * heartT));
+    // Výpočet pozice na srdci podle parametru t (0 až 1)
+    // t = 0 je nahoře uprostřed (začátek srdce), t = 1 je dole u špičky (konec srdce)
+    function getHeartPoint(t, centerX, centerY, scale, isLeft) {
+      // Srdcová parametrická rovnice (t od 0 do PI)
+      const heartT = t * Math.PI;
+      const sign = isLeft ? -1 : 1;
+      const x = sign * 16 * Math.sin(heartT) ** 3;
+      const y = -(13 * Math.cos(heartT) - 5 * Math.cos(2 * heartT) - 2 * Math.cos(3 * heartT) - Math.cos(4 * heartT));
+      return {
+        x: centerX + x * scale,
+        y: centerY + y * scale
+      };
+    }
+
+    // Kompletní trajektorie pro letadlo (Fáze 1: přílet ze strany -> Fáze 2: kreslení srdce -> Fáze 3: odlet do strany)
+    function getPlanePath(progress, centerX, centerY, scale, isLeft) {
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Startovní body po stranách (z 1. fáze podle modrých čar)
+      const startX = isLeft ? -100 : w + 100;
+      const startY = h * 0.75;
+
+      // Vrchol srdce (kde začíná kreslení čáry)
+      const heartTop = getHeartPoint(0, centerX, centerY, scale, isLeft);
+
+      // Konec srdce (dole u špičky)
+      const heartBottom = getHeartPoint(1, centerX, centerY, scale, isLeft);
+
+      // Koncové body při odletu zpět do stran (podle červených čar)
+      const endX = isLeft ? -150 : w + 150;
+      const endY = h * 0.85;
+
+      if (progress <= 0.3) {
+        // FÁZE 1: Přílet ze strany k hornímu bodu srdce (bez kreslení čáry)
+        const p = progress / 0.3;
+        // Hladký přechod (ease-out)
+        const easeP = 1 - Math.pow(1 - p, 2);
         return {
-          x: centerX + x * scale,
-          y: centerY + y * scale
+          x: startX + (heartTop.x - startX) * easeP,
+          y: startY + (heartTop.y - startY) * easeP,
+          drawing: false
+        };
+      } else if (progress <= 0.85) {
+        // FÁZE 2: Kreslení srdce (t od 0 do 1)
+        const p = (progress - 0.3) / 0.55;
+        const pt = getHeartPoint(p, centerX, centerY, scale, isLeft);
+        return {
+          x: pt.x,
+          y: pt.y,
+          drawing: true
         };
       } else {
-        // Odlet po přímé ose nahoru/ven
-        const pStart = getHeartPointLeft(0.72, centerX, centerY, scale);
-        const pPrev = getHeartPointLeft(0.71, centerX, centerY, scale);
-        const dx = pStart.x - pPrev.x;
-        const dy = pStart.y - pPrev.y;
-        const factor = (t - 0.72) / 0.28 * 40;
+        // FÁZE 3: Odlet ze špičky srdce zpět do stran po červených čarách
+        const p = (progress - 0.85) / 0.15;
+        const easeP = p * p; // zrychlení
         return {
-          x: pStart.x + dx * factor,
-          y: pStart.y + dy * factor
+          x: heartBottom.x + (endX - heartBottom.x) * easeP,
+          y: heartBottom.y + (endY - heartBottom.y) * easeP,
+          drawing: false
         };
       }
     }
 
-    function getHeartPointRight(t, centerX, centerY, scale) {
-      if (t <= 0.72) {
-        // Tvarování pravé poloviny srdce
-        const heartT = (t / 0.72) * Math.PI;
-        const x = 16 * Math.sin(heartT) ** 3;
-        const y = -(13 * Math.cos(heartT) - 5 * Math.cos(2 * heartT) - 2 * Math.cos(3 * heartT) - Math.cos(4 * heartT));
-        return {
-          x: centerX + x * scale,
-          y: centerY + y * scale
-        };
-      } else {
-        // Odlet po přímé ose nahoru/ven
-        const pStart = getHeartPointRight(0.72, centerX, centerY, scale);
-        const pPrev = getHeartPointRight(0.71, centerX, centerY, scale);
-        const dx = pStart.x - pPrev.x;
-        const dy = pStart.y - pPrev.y;
-        const factor = (t - 0.72) / 0.28 * 40;
-        return {
-          x: pStart.x + dx * factor,
-          y: pStart.y + dy * factor
-        };
-      }
-    }
-
-    // Vykreslení obrázku letadla s rotací
-    function drawPlane(x, y, angle) {
+    function drawPlane(x, y, angle, isLeft) {
       if (!planeImage.complete) return;
       
       ctx.save();
       ctx.translate(x, y);
-      // Jelikož váš obrázek plane.png směřuje doprava (0 rad), přímo dosadíme vypočítaný angle
+      
+      // Otočení letadla podle směru letu
       ctx.rotate(angle);
       
-      const width = 65; // Šířka vykresleného letadla
+      // Pokud letadlo letí doleva, otočíme ho vertikálně, aby necouvalo
+      if (!isLeft) {
+        // pravé letadlo míří standardně doprava
+      }
+      
+      const width = 60;
       const height = (planeImage.height / planeImage.width) * width;
       
+      // Pro levé letadlo, které může mít otočený čumák doprava v původním PNG, 
+      // zajistíme správnou orientaci podle úhlu natáčení (atan2 to vyřeší automaticky)
       ctx.drawImage(planeImage, -width / 2, -height / 2, width, height);
       ctx.restore();
     }
 
     let progress = 0;
-    const speed = 0.003; // Rychlost animace
+    const speed = 0.0022; // Rychlost animace
     let animationFinished = false;
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
-      const centerY = canvas.height * 0.48;
+      const centerY = canvas.height * 0.42;
       const scale = Math.min(canvas.width, canvas.height) / 38;
 
-      // 1. Kreslení bílé čárkované stopy (Levá strana)
+      // 1. Vykreslení bílé čárkované stopy srdce (kreslí se pouze v rozmezí 0.3 až 0.85)
       ctx.beginPath();
       ctx.setLineDash([7, 7]);
       ctx.strokeStyle = "rgba(255, 255, 255, 0.95)";
       ctx.lineWidth = 3.5;
 
-      for (let i = 0; i <= progress && i <= 1; i += 0.004) {
-        const pt = getHeartPointLeft(i, centerX, centerY, scale);
-        if (i === 0) ctx.moveTo(pt.x, pt.y);
-        else ctx.lineTo(pt.x, pt.y);
+      // Vykreslení levé čáry srdce
+      let drawingStarted = false;
+      for (let i = 0.3; i <= 0.85; i += 0.005) {
+        const pt = getPlanePath(i, centerX, centerY, scale, true);
+        if (!drawingStarted) {
+          ctx.moveTo(pt.x, pt.y);
+          drawingStarted = true;
+        } else {
+          ctx.lineTo(pt.x, pt.y);
+        }
       }
       ctx.stroke();
 
-      // 2. Kreslení bílé čárkované stopy (Pravá strana)
+      // Vykreslení pravé čáry srdce
       ctx.beginPath();
-      for (let i = 0; i <= progress && i <= 1; i += 0.004) {
-        const pt = getHeartPointRight(i, centerX, centerY, scale);
-        if (i === 0) ctx.moveTo(pt.x, pt.y);
-        else ctx.lineTo(pt.x, pt.y);
+      drawingStarted = false;
+      for (let i = 0.3; i <= 0.85; i += 0.005) {
+        const pt = getPlanePath(i, centerX, centerY, scale, false);
+        if (!drawingStarted) {
+          ctx.moveTo(pt.x, pt.y);
+          drawingStarted = true;
+        } else {
+          ctx.lineTo(pt.x, pt.y);
+        }
       }
       ctx.stroke();
+      ctx.setLineDash([]); // Vypnout čárkování
 
-      // Vypnutí čárkování pro kreslení letadla
-      ctx.setLineDash([]);
-
-      // 3. Vykreslení letadel
+      // 2. Vykreslení letadel na aktuální pozici
       if (progress <= 1) {
         // Levé letadlo
-        const pL = getHeartPointLeft(progress, centerX, centerY, scale);
-        const pLNext = getHeartPointLeft(progress + 0.002, centerX, centerY, scale);
+        const pL = getPlanePath(progress, centerX, centerY, scale, true);
+        const pLNext = getPlanePath(Math.min(progress + 0.005, 1), centerX, centerY, scale, true);
         const angleL = Math.atan2(pLNext.y - pL.y, pLNext.x - pL.x);
-        drawPlane(pL.x, pL.y, angleL);
+        drawPlane(pL.x, pL.y, angleL, true);
 
         // Pravé letadlo
-        const pR = getHeartPointRight(progress, centerX, centerY, scale);
-        const pRNext = getHeartPointRight(progress + 0.002, centerX, centerY, scale);
+        const pR = getPlanePath(progress, centerX, centerY, scale, false);
+        const pRNext = getPlanePath(Math.min(progress + 0.005, 1), centerX, centerY, scale, false);
         const angleR = Math.atan2(pRNext.y - pR.y, pRNext.x - pR.x);
-        drawPlane(pR.x, pR.y, angleR);
+        drawPlane(pR.x, pR.y, angleR, false);
 
         progress += speed;
         requestAnimationFrame(animate);
       } else if (!animationFinished) {
         animationFinished = true;
         
-        // Zobrazení lístku chvíli po odletu letadel
+        // Zobrazení lístku po odletu letadel
         setTimeout(() => {
           ticketContainer.classList.add('show');
           nextBtn.classList.add('show');
-        }, 300);
+        }, 400);
       }
     }
 
